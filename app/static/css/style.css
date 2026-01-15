@@ -1,0 +1,173 @@
+/* MID Pflegedokumentation - Custom Styles */
+
+:root {
+    --mid-primary: #2E8B8B;      /* Türkis/Teal - Pflege, Vertrauen */
+    --mid-secondary: #4CAF50;    /* Grün - Wachstum, Gesundheit */
+    --mid-accent: #FFC107;       /* Warm - Menschlichkeit */
+    --mid-light: #E0F2F1;
+    --mid-dark: #1a5555;
+}
+
+/* Override Bootstrap primary color */
+.bg-primary {
+    background-color: var(--mid-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--mid-primary);
+    border-color: var(--mid-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--mid-dark);
+    border-color: var(--mid-dark);
+}
+
+.btn-success {
+    background-color: var(--mid-secondary);
+    border-color: var(--mid-secondary);
+}
+
+.text-primary {
+    color: var(--mid-primary) !important;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background-color: var(--mid-light);
+    border-bottom: 2px solid var(--mid-primary);
+}
+
+/* Stats cards */
+.stats-card {
+    border-left: 4px solid var(--mid-primary);
+}
+
+.stats-card.secondary {
+    border-left-color: var(--mid-secondary);
+}
+
+.stats-card .stats-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--mid-primary);
+}
+
+.stats-card.secondary .stats-number {
+    color: var(--mid-secondary);
+}
+
+/* Table styling */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: var(--mid-light);
+    color: var(--mid-dark);
+    font-weight: 600;
+    border-bottom: 2px solid var(--mid-primary);
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f0fafa;
+}
+
+/* Pflegegrad badges */
+.badge-pflegegrad {
+    font-size: 0.85rem;
+    padding: 0.4em 0.8em;
+}
+
+.badge-pflegegrad-1 { background-color: #a5d6a7; color: #1b5e20; }
+.badge-pflegegrad-2 { background-color: #81c784; color: #1b5e20; }
+.badge-pflegegrad-3 { background-color: #ffcc80; color: #e65100; }
+.badge-pflegegrad-4 { background-color: #ffab91; color: #bf360c; }
+.badge-pflegegrad-5 { background-color: #ef9a9a; color: #b71c1c; }
+
+/* Category badges */
+.badge-category {
+    font-size: 0.8rem;
+}
+
+.badge-grundpflege { background-color: #42a5f5; }
+.badge-medikamente { background-color: #ab47bc; }
+.badge-vitalzeichen { background-color: #ef5350; }
+.badge-ernaehrung { background-color: #66bb6a; }
+.badge-mobilisation { background-color: #ffa726; }
+.badge-besonderheiten { background-color: #78909c; }
+
+/* Forms */
+.form-label {
+    font-weight: 500;
+    color: var(--mid-dark);
+}
+
+.form-control:focus {
+    border-color: var(--mid-primary);
+    box-shadow: 0 0 0 0.2rem rgba(46, 139, 139, 0.25);
+}
+
+/* Empty states */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+/* Quick action buttons */
+.quick-action {
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    color: white;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.2s;
+}
+
+.quick-action:hover {
+    transform: scale(1.02);
+    color: white;
+}
+
+.quick-action i {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Footer */
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stats-card .stats-number {
+        font-size: 2rem;
+    }
+
+    .navbar-brand span {
+        font-size: 1rem;
+    }
+}

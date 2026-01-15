@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}{{ client.name }} - MID Pflegedokumentation{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('clients.list') }}">Klienten</a></li>
+        <li class="breadcrumb-item active">{{ client.name }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <!-- Klienten-Info -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-person me-2"></i>
+                    Klientendaten
+                </h5>
+                <div>
+                    <a href="{{ url_for('clients.export_pdf', id=client.id) }}"
+                       class="btn btn-sm btn-outline-primary me-1" title="Als PDF exportieren">
+                        <i class="bi bi-file-pdf"></i>
+                    </a>
+                    <a href="{{ url_for('clients.edit', id=client.id) }}"
+                       class="btn btn-sm btn-outline-secondary" title="Bearbeiten">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="mb-3">{{ client.name }}</h4>
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Geburtsdatum</dt>
+                    <dd class="col-sm-7">
+                        {% if client.birth_date %}
+                            {{ client.birth_date.strftime('%d.%m.%Y') }}
+                            <small class="text-muted">({{ client.age }} Jahre)</small>
+                        {% else %}
+                            <span class="text-muted">Nicht angegeben</span>
+                        {% endif %}
+                    </dd>
+
+                    <dt class="col-sm-5">Pflegegrad</dt>
+                    <dd class="col-sm-7">
+                        {% if client.care_level %}
+                            <span class="badge badge-pflegegrad badge-pflegegrad-{{ client.care_level }}">
+                                Pflegegrad {{ client.care_level }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted">Nicht angegeben</span>
+                        {% endif %}
+                    </dd>
+
+                    <dt class="col-sm-5">Adresse</dt>
+                    <dd class="col-sm-7">{{ client.address or 'Nicht angegeben' }}</dd>
+
+                    <dt class="col-sm-5">Angelegt am</dt>
+                    <dd class="col-sm-7">{{ client.created_at.strftime('%d.%m.%Y') }}</dd>
+                </dl>
+
+                {% if client.notes %}
+                <hr>
+                <h6 class="text-muted">Notizen</h6>
+                <p class="mb-0">{{ client.notes }}</p>
+                {% endif %}
+            </div>
+            {% if current_user.is_admin %}
+            <div class="card-footer">
+                <form action="{{ url_for('clients.delete', id=client.id) }}" method="POST"
+                      onsubmit="return confirm('Möchten Sie diesen Klienten wirklich löschen? Alle Pflegeeinträge werden ebenfalls gelöscht.');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                        <i class="bi bi-trash me-1"></i> Klient löschen
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pflegeeinträge -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-journal-medical me-2"></i>
+                    Pflegeeinträge
+                </h5>
+                <a href="{{ url_for('entries.create', client_id=client.id) }}" class="btn btn-success btn-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Neuer Eintrag
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if entries %}
+                <div class="list-group list-group-flush">
+                    {% for entry in entries %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge badge-category badge-{{ entry.category }} me-2">
+                                        {{ entry.category_display }}
+                                    </span>
+                                    <small class="text-muted">
+                                        {{ entry.recorded_at.strftime('%d.%m.%Y um %H:%M') }}
+                                    </small>
+                                </div>
+                                <p class="mb-1">{{ entry.description }}</p>
+                                <small class="text-muted">
+                                    <i class="bi bi-person me-1"></i>{{ entry.recorded_by }}
+                                </small>
+                            </div>
+                            <form action="{{ url_for('entries.delete', id=entry.id) }}" method="POST"
+                                  onsubmit="return confirm('Eintrag wirklich löschen?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-2" title="Löschen">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state py-5">
+                    <i class="bi bi-journal-x d-block"></i>
+                    <h5>Noch keine Pflegeeinträge</h5>
+                    <p class="text-muted">Dokumentieren Sie die erste Pflegeleistung für diesen Klienten.</p>
+                    <a href="{{ url_for('entries.create', client_id=client.id) }}" class="btn btn-success">
+                        <i class="bi bi-plus-lg me-1"></i> Eintrag erstellen
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% if entries %}
+            <div class="card-footer text-center">
+                <a href="{{ url_for('entries.list', client_id=client.id) }}" class="text-decoration-none">
+                    Alle Einträge anzeigen <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

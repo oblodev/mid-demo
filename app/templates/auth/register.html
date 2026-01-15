@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Registrieren - MID Pflegedokumentation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus text-primary" style="font-size: 3rem;"></i>
+                    <h4 class="mt-2">Konto erstellen</h4>
+                    <p class="text-muted">Registrieren Sie sich als Pflegekraft</p>
+                </div>
+
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""),
+                                         placeholder="Ihr vollständiger Name") }}
+                        </div>
+                        {% for error in form.name.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""),
+                                          placeholder="ihre@email.de") }}
+                        </div>
+                        {% for error in form.email.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""),
+                                             placeholder="Mindestens 6 Zeichen") }}
+                        </div>
+                        {% for error in form.password.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.password_confirm.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            {{ form.password_confirm(class="form-control" + (" is-invalid" if form.password_confirm.errors else ""),
+                                                     placeholder="Passwort wiederholen") }}
+                        </div>
+                        {% for error in form.password_confirm.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="bi bi-person-check me-1"></i> Registrieren
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                <p class="text-center text-muted mb-0">
+                    Bereits registriert?
+                    <a href="{{ url_for('auth.login') }}">Jetzt anmelden</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

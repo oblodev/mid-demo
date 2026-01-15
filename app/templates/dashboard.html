@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MID Pflegedokumentation{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="bi bi-speedometer2 text-primary me-2"></i>
+        Dashboard
+    </h1>
+    <span class="text-muted">{{ now().strftime('%d.%m.%Y') if now is defined else '' }}</span>
+</div>
+
+<!-- Statistiken -->
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="text-muted mb-1">Klienten gesamt</h6>
+                        <div class="stats-number">{{ client_count }}</div>
+                    </div>
+                    <i class="bi bi-people text-primary" style="font-size: 3rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card stats-card secondary h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="text-muted mb-1">Einträge heute</h6>
+                        <div class="stats-number">{{ today_entries }}</div>
+                    </div>
+                    <i class="bi bi-journal-medical text-success" style="font-size: 3rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100 bg-primary text-white">
+            <div class="card-body d-flex flex-column justify-content-center">
+                <h6 class="mb-3">Schnellzugriff</h6>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('clients.create') }}" class="btn btn-light btn-sm">
+                        <i class="bi bi-person-plus me-1"></i> Neuer Klient
+                    </a>
+                    <a href="{{ url_for('clients.list') }}" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-list me-1"></i> Alle Klienten
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Letzte Einträge -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="bi bi-clock-history me-2"></i>
+            Letzte Pflegeeinträge
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        {% if recent_entries %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Zeitpunkt</th>
+                        <th>Klient</th>
+                        <th>Kategorie</th>
+                        <th>Erfasst von</th>
+                        <th>Beschreibung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in recent_entries %}
+                    <tr>
+                        <td class="text-nowrap">
+                            {{ entry.recorded_at.strftime('%d.%m. %H:%M') }}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('clients.detail', id=entry.client_id) }}" class="text-decoration-none">
+                                {{ entry.client.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge badge-category badge-{{ entry.category }}">
+                                {{ entry.category_display }}
+                            </span>
+                        </td>
+                        <td>{{ entry.recorded_by }}</td>
+                        <td class="text-truncate" style="max-width: 300px;">
+                            {{ entry.description[:100] }}{% if entry.description|length > 100 %}...{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-journal-x d-block"></i>
+            <h5>Noch keine Pflegeeinträge</h5>
+            <p class="text-muted">Erstellen Sie einen Klienten und dokumentieren Sie die erste Pflege.</p>
+            <a href="{{ url_for('clients.create') }}" class="btn btn-primary">
+                <i class="bi bi-person-plus me-1"></i> Klient anlegen
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
